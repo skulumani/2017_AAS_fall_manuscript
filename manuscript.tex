@@ -262,7 +262,7 @@ Blender is primarily used by the animation and computer modeling fields to creat
 Blender offers the capability of accurately modelling the various effects of camera, lighting, and surface properties of a scene using the \texttt{cycles} path-tracing rendering engine.
 A unique feature is the ability to compile the Blender rendering software as a python module.
 This allows one to use the capabilities of Blender through a Python API in personal scripts and functions programmatically, rather than through a desktop based graphical interface.
-A camera is simulated within blender with the following parameters, which are chosen to emulate the primary sensor of the NEAR spacecraft~\cite{hawkins1997}.
+A camera is simulated within blender with the parameters shown in~\cref{tab:camera_parameters}, which are chosen to emulate the primary sensor of the NEAR spacecraft~\cite{hawkins1997}.
 \begin{table}
     \centering
 \begin{tabular}{llr}  
@@ -276,7 +276,7 @@ Image Size & horizontal & \SI{537}{\px}\\
 \(f\)& focal length & \SI{167.35}{\milli\meter}\\
 \bottomrule
 \end{tabular}
-\caption{Camera parameters used in simulation}
+\caption{Camera parameters used in simulation~\label{tab:camera_parameters}}
 \end{table}
 
 % TODO: Discuss some basics of monocular SLAM/visual odometry
