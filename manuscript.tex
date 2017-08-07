@@ -27,8 +27,9 @@
     This paper considers the coupled orbit and attitude dynamics of a dumbbell spacecraft around an asteroid. 
     Geometric methods are used to derive the coupled equations of motion, defined on the configuration space \(\SE\), and then a nonlinear controller is designed to enable trajectory tracking of desired landing trajectories.
     Rather than relying on sliding mode control or optimization based methods, the proposed approach avoids the increased control utilization and computational complexity inherent in other techniques.
-    The stability of the proposed geometric controller is proven using a rigorous Lyapunov analysis.
-    We demonstrate the use of this control scheme with a landing simulation on asteroid 4769 Castalia.
+    The nonlinear controller is used to track a desired landing trajectory to the asteroid surface. 
+    A monocular imaging sensor is used to provide position and attitude estimates using visual odometry to enable closed-loop trajectory tracking.
+    We demonstrate this control scheme with a landing simulation about asteroid Itokawa.
 \end{abstract}
 
 \section{Introduction}\label{sec:introduction}
@@ -101,23 +102,15 @@ Due to the relative size of the spacecraft as compared to the orbital radius, th
 Through the use of the polyhedron gravitational model we ensure an accurate representation of the gravitational moment on the spacecraft throughout all phases of flight. 
 Furthermore, we present a nonlinear controller developed on the special euclidean group which asymptotically tracks a desired landing trajectory. 
 
-\section{Problem Formulation}\label{sec:problem}
-In this paper, we consider the landing of a dumbbell model of an under actuated spacecraft onto an asteroid.
-The dumbbell model is a well-known representation of a multi body spacecraft.
+\section{Mathematical Formulation}\label{se:mathematical_problem}
+In this paper, we consider the landing of a dumbbell model of a spacecraft onto an asteroid.
+The dumbbell spacecraft consists of two masses connected by a massless rod and is a well-known representation of a multi body spacecraft.
 Furthermore, the dumbbell model captures the important interactions of the coupling between orbital and attitude dynamics. 
-The dumbbell spacecraft consists of two masses connected by a massless rod.
-This simple model is useful to capture the main characteristics of a wide variety of spacecraft configurations.
+As a result, this simple model is useful to capture the main characteristics of a wide variety of spacecraft configurations.
 Typically, spacecraft have mass concentrated in a central structure, referred to as the bus, which houses the command and control system, actuators, fuel, sensors etc. 
 In addition, comparatively light-weight solar panels extend from the bus to provide electrical energy from solar radiation. 
 As a result, the distributed mass of the spacecraft is captured with the dumbbell representation.
 
-% most use a spherical harmonic model or a ellipsoid model but we use a polyhedron model
-An accurate gravitational potential model is necessary for the operation of spacecraft about asteroids.
-Additionally, a detailed shape model of the asteroid is needed for trajectories passing close to the body.
-The classic approach is to expand the gravitational potential into a harmonic series and compute the series coefficients.
-However, the harmonic expansion is always an approximation as a result of the infinite order series used in the representation.
-Additionally, the harmonic model used outside of the circumscribing sphere is not guaranteed to converge inside the sphere, which makes it unsuitable for trajectories near the surface.
-Instead, we use the polyhedron potential model to represent the shape of the asteroid and also the gravitational potential assuming a constant density~\cite{werner1994,werner1997}. 
 
 The equations of motion of the dumbbell spacecraft about an asteroid are derived using Hamilton's Principle. 
 The first step is to choose generalized coordinates \( q \) and a corresponding configuration space \( Q \).
@@ -135,7 +128,7 @@ The configuration space for rigid body motion is the semi-direct product, \(\SE 
 The variations should be carefully constructed such that they respect the geometry of the configuration space.
 By expressing the motion of the dumbbell directly on the special euclidean group, we avoid the issues inherent in using other kinematic representations which fail to preserve the geometric properties of the configuration space.
 
-\subsection{Equations of Motion}
+\subsection{Dumbbell Spacecraft Equations of Motion}\label{sec:dumbbell}
 
 The kinematics of the dumbbell and asteroid are described in the inertial frame by
 \begin{itemize}
@@ -201,7 +194,103 @@ In addition, a desired landing trajectory is followed using nonlinear control te
     \label{fig:trajectory} 
 \end{figure}
 
-\subsection{Nonlinear Landing Controller}\label{sec:landing}
+\subsection{Polyhedron Potential Model}\label{sec:polyhedron_potential}
+
+% most use a spherical harmonic model or a ellipsoid model but we use a polyhedron model
+An accurate gravitational potential model is necessary for the operation of spacecraft about asteroids.
+Additionally, a detailed shape model of the asteroid is needed for trajectories passing close to the body.
+The classic approach is to expand the gravitational potential into a harmonic series and compute the series coefficients.
+However, the harmonic expansion is always an approximation as a result of the infinite order series used in the representation.
+Additionally, the harmonic model used outside of the circumscribing sphere is not guaranteed to converge inside the sphere, which makes it unsuitable for trajectories near the surface.
+
+We represent the gravitational potential of the asteroid using a polyhedron gravitation model.
+This model is composed of a polyhedron, which is a three-dimensional solid body, that is defined by a series of vectors in the body-fixed frame.
+The vectors define vertices in the body-fixed frame as well as planar faces which compose the surface of the asteroid.
+We assume that each face is a triangle composed of three vertices and three edges.
+As a result, only two faces meet at each edge while three faces meet at each vertex.
+Only the body-fixed vectors, and their associated topology, is required to define the exterior gravitational model.
+References~\citenum{werner1994} and~\citenum{werner1996} give a detailed derivation of the polyhedron model.
+Here, we summarize the key developments and equations required for implementation.
+
+Consider three vectors \( \vecbf{v}_1, \vecbf{v}_2, \vecbf{v}_3 \in \R^{3 \times 1} \), assumed to be ordered in a counterclockwise direction about an outward facing normal vector, which define a face.
+It is easy to define the three edges of each face as
+\begin{align}\label{eq:edges}
+    \vecbf{e}_{i+1,i} = \vecbf{v}_{i+1} - \vecbf{v}_i \in \R^{3 \times 1 },
+\end{align}
+where the index \( i \in \parenth{1,2,3} \) is used to permute all edges of each face.
+Since each edge is a member of two faces, there exist two edges which are defined in opposite directions between the same vertices.
+We can also define the outward normal vector to face \( f\)  as
+\begin{align}\label{eq:face_normal}
+    \hat{\vecbf{n}}_f &= \parenth{\vecbf{v}_{2} - \vecbf{v}_1} \times \parenth{\vecbf{v}_{3} - \vecbf{v}_2} \in \R^{3 \times 1},
+\end{align}
+and the outward facing normal vector to each edge as
+\begin{align}\label{eq:edge_normal}
+    \hat{\vecbf{n}}_{i+1,i}^f &= \parenth{\vecbf{v}_{i+1} - \vecbf{v}_i} \times \hat{\vecbf{n}}_f \in \R^{3 \times 1}.
+\end{align}
+For each face we define the face dyad \( \vecbf{F}_f \) as
+\begin{align}\label{eq:face_dyad}
+    \vecbf{F}_f &= \hat{\vecbf{n}}_f \hat{\vecbf{n}}_f \in \R^{3 \times 3}.
+\end{align}
+Each edge is a member of two faces and has an outward pointing edge normal vector, given in~\cref{eq:edge_normal}, perpendicular to both the edge and the face normal.
+For the edge connecting the vectors \( \vecbf{v}_1 \) and \( \vecbf{v}_2 \), which are shared between the faces \(A\) and \( B\), the per edge dyad is given by
+\begin{align}\label{eq:edge_dyad}
+    \vecbf{E}_{12} = \hat{\vecbf{n}}_A \hat{\vecbf{n}}_{12}^A + \hat{\vecbf{n}}_B \hat{\vecbf{n}}_{21}^B \in \R^{3 \times 3}.
+\end{align}
+The edge dyad \( \vecbf{E}_e  \), is defined for each edge and is a function of the two adjacent faces meeting at that edge.
+The face dyad \( \vecbf{F}_f \), is defined for each face and is a function of the face normal vectors.
+
+Let \( \vecbf{r}_i \in \R^{3 \times 1} \) be the vector from the spacecraft to the vertex \( \vecbf{v}_i \) and it's length is given by \( r_i = \norm{\vecbf{r}_i} \in \R^{1} \).
+The per-edge factor \( L_e \in \R^{1}\), for the edge connecting vertices \( \vecbf{v}_i \) and \( \vecbf{v}_j \), with a constant length \( e_{ij} = \norm{\vecbf{e}_{ij}} \in \R^1\) is
+\begin{align}\label{eq:edge_factor}
+    L_e &= \ln \frac{r_i + r_j + e_{ij}}{r_i + r_j - e_{ij}}.
+\end{align}
+For the face defined by the vertices \( \vecbf{v}_i, \vecbf{v}_j, \vecbf{v}_k \) the per-face factor \( \omega_f \in \R^{1} \) is
+\begin{align}\label{eq:face_factor}
+    \omega_f &= 2 \arctan \frac{\vecbf{r}_i \cdot \vecbf{r}_j \times \vecbf{r}_k}{r_i r_j r_k + r_i \parenth{\vecbf{r}_j \cdot \vecbf{r}_k} + r_j \parenth{\vecbf{r}_k \cdot \vecbf{r}_i} + r_k \parenth{\vecbf{r}_i \cdot \vecbf{r}_j}} .
+\end{align}
+The gravitational potential due to a constant density polyhedron is given as
+\begin{align}\label{eq:potential}
+    U(\vecbf{r}) &= \frac{1}{2} G \sigma \sum_{e \in \text{edges}} \vecbf{r}_e \cdot \vecbf{E}_e \cdot \vecbf{r}_e \cdot L_e - \frac{1}{2}G \sigma \sum_{f \in \text{faces}} \vecbf{r}_f \cdot \vecbf{F}_f \cdot \vecbf{r}_f \cdot \omega_f \in \R^1,
+\end{align}
+where \( \vecbf{r}_e\) and \(\vecbf{r}_f \) are the vectors from the spacecraft to any point on the respective edge or face, \( G\) is the universal gravitational constant, and \( \sigma \) is the constant density of the asteroid.
+Furthermore we can use these definitions to define the attraction, gravity gradient matrix, and Laplacian as
+\begin{align}
+    \nabla U ( \vecbf{r} ) &= -G \sigma \sum_{e \in \text{edges}} \vecbf{E}_e \cdot \vecbf{r}_e \cdot L_e + G \sigma \sum_{f \in \text{faces}} \vecbf{F}_f \cdot \vecbf{r}_f \cdot \omega_f \in \R^{3 \times 1} , \label{eq:attraction}\\
+    \nabla \nabla U ( \vecbf{r} ) &= G \sigma \sum_{e \in \text{edges}} \vecbf{E}_e  \cdot L_e - G \sigma \sum_{f \in \text{faces}} \vecbf{F}_f \cdot \omega_f \in \R^{3 \times 3}, \label{eq:gradient_matrix}\\
+    \nabla^2 U &= -G \sigma \sum_{f \in \text{faces}}  \omega_f \in \R^1 .\label{eq:laplacian}
+\end{align}
+
+One interesting thing to note is that both~\cref{eq:face_dyad,eq:edge_dyad} can be precomputed without knowledge of the position of the satellite.
+They are both solely functions of the vertices and edges of the polyhedral shape model and are computed once and stored.
+Once a position vector \( \vecbf{r} \) is defined, the scalars given in~\cref{eq:edge_factor,eq:face_factor} can be computed for each face and edge.
+Finally,~\cref{eq:potential} is used to compute the gravitational potential on the spacecraft.
+The Laplacian, defined in~\cref{eq:laplacian}, gives a simple method to determine if the spacecraft has collided with the body~\cite{werner1996}. 
+
+\subsection{Itokawa Shape Model and Simulated Imagery}\label{sec:imagery}
+In this work, we consider trajectories about asteroid Itokawa.
+Itokawa was the target of the Hayabusa mission and detailed shape and surface maps have been generated~\cite{kawaguchi2006,tanimoto2013}.
+We use the estimated rotation period of \SI{12.1}{\hour} with a nominal density of \SI{1.9}{\gram\per\centi\meter\cubed}~\cite{fujiwara2006}.
+% TODO: look up how many facets in the itokawa high model
+The shape model is composed of \num{4092} triangular faces and a rendering of the asteroid is provided in~\cref{fig:itokawa_3d}.
+A highly detailed model is used to for the shape of the asteroid to provide a more detailed and feature rich imaging target. 
+However, the polyhedron potential model uses a much coarser shape composed of \num{64} faces. 
+This greatly reduces the complexity of the potential model without a significant difference in the qualitative nature of the dynamic environment.
+% TODO: Insert a picture of Itokawa generated from Blender. Use the high quality model
+
+% TODO: Add some detail on Blender and image processing
+\begin{itemize}
+    \item Simulate images using blender
+    \item Discuss some basics of visual odometry and feature detection
+\end{itemize}    
+\section{Nonlinear Landing Controller on \SE}\label{sec:controller}
+
+% TODO: detail on nonlinear controller
+\begin{itemize}
+    \item Show development of \SE controller
+    \item Summarize the stability proof for trajectory tracking
+    \item We're assuming a fully actuated spacecraft
+\end{itemize}
+
 
 A wide variety of control schemes have been proposed for asteroid landing missions~\cite{furfaro2013,li2011a}.
 In addition, there are a  variety of controllers developed for systems evolving on \( \SE \)~\cite{lee2010c, goodarzi2015}.
@@ -215,7 +304,17 @@ In addition, rather than offering only a bounded stability guarantee, the propos
 This stability guarantee is critical for mission operations passing close to the surface over highly irregular terrain.
 Furthermore, the coupled geometric controller explicitly considers the attitude coupling of the body in contrast to many of the previous approaches.
 
-\section{Expected Results and Significance}\label{sec:expected}
+\section{Numerical Simulation}\label{sec:simulation}
+
+% TODO: Itokawa simulation
+\begin{itemize}
+    \item Simulation about asteroid Itokawa
+    \item Using Blender for generating simulated imagery
+    \item Describe the body fixed vertical descent (straight vertical descent in body frame)
+    \item how to determine attitude trajectory to ensure spacecraft points at asteroid
+\end{itemize}
+
+\section{Conclusions}\label{sec:conclusions}
 There have been a variety of approaches for the analysis and design of orbital trajectories around asteroids.
 Relatively less work has been directed towards the design of landing trajectories.
 Furthermore, much of the previous work has only treated the orbital or translational dynamics.
