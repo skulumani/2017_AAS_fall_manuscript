@@ -320,6 +320,24 @@ After further manipulation and the attitude kinematics equation it is possible t
 \begin{align}\label{eq:angular_velocity_error_vector}
     e_\Omega = \Omega - R^T R_d \Omega_d .
 \end{align}
+With the properly defined attitude error vectors the rotational control input is defined as 
+\begin{align*}
+    \vb{u}_m = - k_R e_R - k_\Omega e_\Omega + \Omega \times J \Omega - J \parenth{\hat{\Omega} R^T R_d \Omega_d - R^T R_d \dot{\Omega}_d} - \vb{M}_1 - \vb{M_2} 
+\end{align*}
+where \( k_R, k_\Omega \) are positive controller constants.
+
+The translational control input is defined in a similar manner. 
+First we define a smooth tracking command \( x_d(t) \in \R^3 \), which defines the desired position of the spacecraft in the inertial frame.
+The tracking error vectors are easier to define as they evolve on a Euclidean space rather than a nonlinear manifold and are given by
+\begin{align}
+    e_x = x - x_d ,\\
+    e_v = v - \dot{x}_d .
+\end{align}
+With the error variables, the translational control input is then given by
+\begin{align}
+    \vb{u}_f = - k_x e_x  - k_v e_v + ( m_1  + m_2 ) \ddot{x}_d - \vb{F}_1 - \vb{F}_2 ,
+\end{align}
+where \( k_x, k_v \) are positive constants. 
 
 Determine error variables on \SE
 
