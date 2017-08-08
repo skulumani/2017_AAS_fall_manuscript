@@ -224,10 +224,10 @@ Applying the calculus of variations and integration by parts results in the fami
 Applying the Legendre transformation allows for the same dynamics to be expressed in an equivalent form as Hamilton's equations~\cite{lanczos1970}.
 The equations of motion of a dumbbell spacecraft influenced by a polyhedron potential model is given as
 \begin{align}
-    \dot{\vb{x}} &= \vb{v}, \\
-    \parenth{m_1 + m_2} \dot{\vecbf{v}} &= m_1 R_A \deriv{U}{\vecbf{z}_1} + m_2 R_A \deriv{U}{\vecbf{z}_2} + \vecbf{u}_f, \\
-    \dot{R} &= R S(\vb{\Omega}) , \\
-    J \dot{\vecbf{\Omega}} + \vecbf{\Omega} \times J \vecbf{\Omega} &= \vecbf{M}_1 + \vecbf{M}_2 + \vecbf{u}_m.
+    \dot{\vb{x}} &= \vb{v}, \label{eq:position_kinematics}\\
+    \parenth{m_1 + m_2} \dot{\vecbf{v}} &= m_1 R_A \deriv{U}{\vecbf{z}_1} + m_2 R_A \deriv{U}{\vecbf{z}_2} + \vecbf{u}_f, \label{eq:translational_dynamics}\\
+    \dot{R} &= R S(\vb{\Omega}) , \label{eq:attitude_kinematics}\\
+    J \dot{\vecbf{\Omega}} + \vecbf{\Omega} \times J \vecbf{\Omega} &= \vecbf{M}_1 + \vecbf{M}_2 + \vecbf{u}_m. \label{eq:attitude_dynamics}
 \end{align}
 The vectors \( \vecbf{z}_1 \) and \( \vecbf{z}_2\) define the position of the dumbbell masses as represented in the asteroid fixed frame and are defined as
 \begin{align}
@@ -321,7 +321,7 @@ After further manipulation and the attitude kinematics equation it is possible t
     e_\Omega = \Omega - R^T R_d \Omega_d .
 \end{align}
 With the properly defined attitude error vectors the rotational control input is defined as 
-\begin{align*}
+\begin{align*}\label{eq:rotational_control}
     \vb{u}_m = - k_R e_R - k_\Omega e_\Omega + \Omega \times J \Omega - J \parenth{\hat{\Omega} R^T R_d \Omega_d - R^T R_d \dot{\Omega}_d} - \vb{M}_1 - \vb{M_2} 
 \end{align*}
 where \( k_R, k_\Omega \) are positive controller constants.
@@ -334,25 +334,41 @@ The tracking error vectors are easier to define as they evolve on a Euclidean sp
     e_v = v - \dot{x}_d .
 \end{align}
 With the error variables, the translational control input is then given by
-\begin{align}
+\begin{align}\label{eq:translation_control}
     \vb{u}_f = - k_x e_x  - k_v e_v + ( m_1  + m_2 ) \ddot{x}_d - \vb{F}_1 - \vb{F}_2 ,
 \end{align}
 where \( k_x, k_v \) are positive constants. 
+The control gains are chosen based on the desired closed-loop system response. 
+A variety of techniques are available to choose these gains, but a simple linear analysis offers a straightforward and systematic approach to choosing suitable values. 
+We use the control inputs defined in~\cref{eq:translation_control,eq:rotational_control} and substitute them into the dynamic equations of motion in~\cref{eq:translational_dynamics,eq:attitude_dynamics}.
+This results in the dynamics of the error variables and the gains are chosen to ensure the error behavior meets desired performance criteria~\cite{nise2004}.
 
-Determine error variables on \SE
-
-define control as a function of the error variables
-
-Choice of control gains from linear stabiilty analysis
-% TODO: Add controller equations
-
-% TODO: Some discussino of the stability of tracking a trajectory
 
 \subsection{Estimating motion from Monocular Imagery}\label{eq:image_processing}
 
+Typically, spacecraft missions require extensive interaction from ground based human operators. 
+This interaction ranges from simple status checks up to navigation and pointing commands.
+In addition, there is frequently a large group of analysts in support of any given mission. 
+A wide variety of factor make human in the loop control of spacecraft especially difficult.
+First, the vast distances cause significant time delays which render it impossible to react immediately to events experienced by the spacecraft. 
+Furthermore, deep space missions are designed to continuous mission operations for many years or even decades. 
+It is becoming increasingly difficult to maintain trained and knowledgeable staff for several decades in order to support a single mission.
+In addition, these operators become increasingly scarce as the contemporary hardware and software tools surpass those of these decades old spacecraft. 
+As a result, there is a large focus to enable some level, with the eventual goal, of completely autonomous spacecraft systems.
+
+We implement a form of visual odometry to estimate the attitude and position of the spacecraft from a series of moncular imagery.
+
+% TODO: Cite ORB-SLAM2 paper
+% TODO: Give a brief overview of the method
+
+One first step is to enable autonomous navigation and control 
+
+Use image sensors for localization and can extend to mapping
+
+We demonstrate the ability to estimate location using monocular images
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\textwidth,keepaspectratio]{figures/itokawa_feature_matching.png}
+    \includegraphics[width=1\textwidth,keepaspectratio]{figures/itokawa_feature_matching.png}
     \caption{Demonstration of feature detection and matching between simulated images of asteroid 25413 Itokawa}
     \label{fig:itokawa_feature_matching}
 \end{figure}
