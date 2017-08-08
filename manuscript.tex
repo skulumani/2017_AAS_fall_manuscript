@@ -356,7 +356,9 @@ It is becoming increasingly difficult to maintain trained and knowledgeable staf
 In addition, these operators become increasingly scarce as the contemporary hardware and software tools surpass those of these decades old spacecraft. 
 As a result, there is a large focus to enable some level, with the eventual goal, of completely autonomous spacecraft systems.
 
-We implement a form of visual odometry to estimate the attitude and position of the spacecraft from a series of moncular imagery.
+We seek to utilize well-proven methods in the computer vision and robotics community to first localize the position of the spacecraft from visual imagery.
+A secondary step, which is left to a subsequent publication, is then to use this imagery to autonomously update the position of the spacecraft while simultaneously mapping the surface. 
+We utilize the state of the art ORB-SLAM implementation to estimate the state of the spacecraft using monocular images~\cite{mur-artal2015}.
 
 % TODO: Cite ORB-SLAM2 paper
 % TODO: Give a brief overview of the method
