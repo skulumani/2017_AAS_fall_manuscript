@@ -359,15 +359,16 @@ As a result, there is a large focus to enable some level, with the eventual goal
 We seek to utilize well-proven methods in the computer vision and robotics community to first localize the position of the spacecraft from visual imagery.
 A secondary step, which is left to a subsequent publication, is then to use this imagery to autonomously update the position of the spacecraft while simultaneously mapping the surface. 
 We utilize the state of the art ORB-SLAM implementation to estimate the state of the spacecraft using monocular images~\cite{mur-artal2015}.
-
-% TODO: Cite ORB-SLAM2 paper
-% TODO: Give a brief overview of the method
-
-One first step is to enable autonomous navigation and control 
-
-Use image sensors for localization and can extend to mapping
-
-We demonstrate the ability to estimate location using monocular images
+This method provides a feature based monocular SLAM system that can operate in real-time for a wide variety of environments. 
+ORB-SLAM builds on proven methods in the robotics community to create a custom SLAM system that provides for autonomous tracking and mapping in an unknown environment. 
+The first step in ORB-SLAM is to determine accurate features within an image that are most easily recognized in subsequent images. 
+This ``feature-extraction'' stage uses the FAST feature detector to determine suitable features, and then the ORB feature descriptor to a store a compact, scale-invariant description of the feature properties.
+Next, these features are matched to subsequent images in a ``feature-matching'' stage to determine correspondance between subsequent images. 
+For example,~\cref{fig:itokawa_feature_matching} shows a demonstration of features computed in two view of asteroid Itokawa. 
+In addition, the correspondance is accurately computed between matching features as shown by the horizontal lines across both images.
+From these correspondances, the pose of the camera system is estimated and predicted forward in time using a constant velocity model.
+In a simultaenous thread, the ORB-SLAM system builds a local map and stores feature data in order to perform loop closure in the event of returning to a previously imaged location.
+We utilize ORB-SLAM to provide an estimate of the position of the rigid spacecraft and will use this estimate to compute the control input.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=1\textwidth,keepaspectratio]{figures/itokawa_feature_matching.png}
