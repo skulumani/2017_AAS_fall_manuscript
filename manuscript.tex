@@ -377,9 +377,41 @@ We utilize ORB-SLAM to provide an estimate of the position of the rigid spacecra
 \end{figure}
 \section{Numerical Simulation}\label{sec:simulation}
 
-% TODO: Itokawa simulation
-% TODO: Describe teh landing trajectory - vertical descent in the body fixed frame
-% TODO: Show desired attitude control for nadir pointing
+We present a numerical simulation of a rigid dumbbell about asteroid Itokawa.
+The dumbbell spacecraft is composed of two equal masses, \( m_1, m_2 = \SI{500}{\kilo\gram} \), seperated by \( l = \SI{3}{\meter} \).
+The dumbbell body frame is defined with the first body fixed axis, \( \vb{b}_1 \), originating at the center of mass of the spacecraft and directed along the vector from \( m_1 \) towards \( m_2 \).
+The other two axes of the spacecraft fixed frame are chosen orthogonal to the \( \vb{b}_1 \) and lie in the plane orthogonal to the dumbbell axis of symmetry. 
+A camera, using the parameters from~\cref{tab:camera_parameters}, is aligned with the \( \vb{b}_1 \) axis and used to feed image data to the ORB-SLAM system.
+A numerical simulation is used to demonstrate the geometric control of the coupled motion of the spacecraft, and the ability to estimate the motion of the spacecraft from monocular imagery.
+
+The initial condition of the spacecraft is defined as
+\begin{align}
+    \vb{x}_0 &= \begin{bmatrix} 0 & -2.550 & 0 \end{bmatrix} \si{\kilo\meter}, \\
+    R_0 &= \exp { \frac{\pi}{2} \vb{e}_3 } .
+\end{align}
+The spacecraft begins on the inertial \( \vb{e}_2 \) axis and initially pointing at the asteroid. 
+A tracking command is designed to transition the spacecraft towards the asteroid fixed \( \vb{f}_1  \) axis followed by a vertical descent along towards the asteroid surface.
+The translational command is divided into two stages, a traverse step where the spacecraft follows a trajectory to align itself with the \( \vb{f}_1 \) axis and a landing step where the spacecraft follows a constant velocity descent towards the surface. 
+The desired position command is defined as
+\begin{align}
+    \vb{x}_d = 
+    \begin{cases}
+        2.550 \begin{bmatrix} \sin{\omega t} & -\cos{\omega t} & 0 \end{bmatrix}, & t \leq t_d \\
+        R_A \begin{bmatrix} \frac{2}{t_d} (t - t_d) + 2.550 & 0 & 0 \end{bmatrix}, & t > t_d , 
+    \end{cases}
+\end{align}
+where \( \omega = \frac{\pi}{2 t_d} \), \( t_d \) is the time from the simulation start when the constant velocity descent should begin, and \( t \) is the simulation time step.
+
+The desired attitude command is chosen such that the spacecraft camera axis, \( \vb{b}_1 \), is directed along the nadir towards the asteroid.
+It is sufficient to define two orthogonal vectors to uniquely determine the attitude of the spacecraft.
+The \( \vb{b}_{3d} \) vector is chosen to lie in the plane spanned by \(\vb{b}_{1d} \) and \( \vb{e}_3 = \vb{f}_3 \).
+The desired attitude command is defined as
+\begin{align}
+    \vb{b}_{1d} &= - \frac{\vb{x}}{\norm{\vb{x}}} , \\
+    \vb{b}_{3d} &= \frac{\vb{f}_3 - \parenth{\vb{f}_3 \cdot \vb{b}_{1d}} \vb{b}_{1d}}{\norm{\vb{f}_3 - \parenth{\vb{f}_3 \cdot \vb{b}_{1d}} \vb{b}_{1d}}}, \\
+    \vb{b}_{2d} &= \vb{b}_{3d} \times \vb{1d} , \\
+R_d &= \begin{bmatrix} \vb{b}_{1d} & \vb{b}_{2d} & \vb{b}_{3d} \end{bmatrix} .
+\end{align}
 
 \section{Conclusions}\label{sec:conclusions}
 There have been a variety of approaches for the analysis and design of orbital trajectories around asteroids.
