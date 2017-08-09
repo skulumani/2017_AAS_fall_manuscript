@@ -443,11 +443,18 @@ In future work, we seek to use this state estimate in a closed-loop controller t
     \caption{Example image of Itokawa at \( t = \SI{837}{\second}\)\label{fig:example_image}}
 \end{figure}
 From each image, a series of features are detected and tracked between subsequent frames.
-A visualization of this process is shown in~c\ref{fig:orbslam_mappoints} which shows the tracked features of the image in green.
+A visualization of this process is shown in~\cref{fig:orbslam_mappoints} which shows the tracked features of the image in green.
+From these tracked features it is possible to estimate the relative motion of the camera~\cite{szeliski2010}.
+\Cref{fig:orbslam_localization} shows a visualization of the localization process from the imagery. 
 \begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.75\textwidth, keepaspectratio]{figures/orbslam_mappoints.png}
-    \caption{ORB-SLAM2 Feature Tracking Visualization\label{fig:orbslam_mappoints}}
+    \begin{subfigure}[htbp]{0.5\textwidth} 
+        \includegraphics[width=\textwidth, keepaspectratio]{figures/orbslam_mappoints.png} 
+        \caption{ORB-SLAM2 Feature Tracking Visualization\label{fig:orbslam_mappoints}} 
+    \end{subfigure}~
+    \begin{subfigure}[htbp]{0.5\textwidth} 
+        \includegraphics[width=\textwidth, keepaspectratio]{figures/orbslam_localization.png} 
+        \caption{ORB-SLAM2 Localization from monocular images \label{fig:orbslam_localization}} 
+    \end{subfigure} 
 \end{figure}
 % TODO: Plots of trajectory
 
