@@ -412,13 +412,45 @@ The desired attitude command is defined as
     \vb{b}_{2d} &= \vb{b}_{3d} \times \vb{1d} , \\
 R_d &= \begin{bmatrix} \vb{b}_{1d} & \vb{b}_{2d} & \vb{b}_{3d} \end{bmatrix} .
 \end{align}
-The spacecraft camera axis is aligned throughout the landing trajectory as the spacecraft moves in the equatorial plane of the asteroid.
+The camera axis is aligned with the spacecraft \( \vb{b}_ 1 \) axis, which is direted towards the asteroid, throughout the landing trajectory as the spacecraft moves in the equatorial plane of the asteroid.
+
+The simulation is carried out over \SI{7200}{\second} with the spacecraft following a circular trajectory for the first \SI{3600}{\sec} before vertically descending in the body fixed frame for the last \SI{3600}{\second}.
+\Cref{fig:true_landing_trajectory} shows a view from the positive \( \vb{f}_3 \) pole of the asteroid of the simulated trajectory. 
+The position of the center of mass of the dumbbell is shown in blue, while the pointing direction of the camera view axis is defined in red. 
+The attitude of the dumbbell is displayed at several points along the trajectory demonstraiting the pointing of the camera. 
+Furthermore, asteroid Itokawa is shown in it's final orientation at the completion of the landing simulation. 
+\Cref{fig:pos_components} shows that the nonlinear controller is able to accurately track the desired translational trajectory for the duration of the simulation.
+\begin{figure}[htbp]
+    \begin{subfigure}[htbp]{0.5\textwidth} 
+        \includegraphics[width=\textwidth, keepaspectratio]{figures/traj_fig.pdf} 
+        \caption{Planar view of landing trajectory\label{fig:true_landing_trajectory}} 
+    \end{subfigure}~
+    \begin{subfigure}[htbp]{0.5\textwidth} 
+        \includegraphics[width=\textwidth, keepaspectratio]{figures/pos_fig.pdf} 
+        \caption{Position of spacecraft in the inertial frame\label{fig:pos_components}} 
+    \end{subfigure} 
+    \caption{Landing trajectory to asteroid Itokawa~\label{fig:position}}
+\end{figure}
+
+Concurrent with the simulation, we generate images of Itokawa using Blender, as described earlier.
+The images are generated at a rate of \SI{1}{\hertz} and stored for post processing and one exampel view is shown in~\cref{fig:example_image}. 
+From these images we estimate the position of the camera relative to the asteroid using monocular localization.
+In this work, we demonstrate the ability to generate realistic imagery and the processing of these images to determine a state estimate of the camera pose.
+In future work, we seek to use this state estimate in a closed-loop controller to enable a fully-autonomous control system for the spacecraft. 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.75\textwidth]{figures/traj_fig.pdf}
-    \caption{Equatorial view of landing trajectory\label{fig:true_landing_trajectory}}
+    \includegraphics[width=0.75\textwidth,keepaspectratio]{figures/test000837.png}
+    \caption{Example image of Itokawa at \( t = \SI{837}{\second}\)\label{fig:example_image}}
+\end{figure}
+From each image, a series of features are detected and tracked between subsequent frames.
+A visualization of this process is shown in~c\ref{fig:orbslam_mappoints} which shows the tracked features of the image in green.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\textwidth, keepaspectratio]{figures/orbslam_mappoints.png}
+    \caption{ORB-SLAM2 Feature Tracking Visualization\label{fig:orbslam_mappoints}}
 \end{figure}
 % TODO: Plots of trajectory
+
 % TODO: Control input plot
 % TODO: Show estimation from SLAM
 \section{Conclusions}\label{sec:conclusions}
