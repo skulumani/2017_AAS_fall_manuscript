@@ -477,10 +477,12 @@ The approximation of a spacecraft as a point mass rather than an extended rigid 
 This work directly derives the equations of motion of a dumbbell spacecraft around an asteroid described using a polyhedron potential model. 
 We explicitly consider the impact of the gravitational moment on both the orbit and attitude dynamics. 
 With this accurate equations of motion we develop geometric nonlinear controllers which allow for the vehicle to track a desired landing trajectory. 
-The landing portion allows for an end to end mission design scheme based on rigorous geometric mechanics techniques.
-
+The desired landing trajectory is accurately followed by the nonlinear controller on \SE.
+Furthermore, we use current image processing techniques to estimate the motion of the spacecraft given only two-dimensional images. 
+Inspite of the challenging environment, with limited lighting and a reduced simulation span, the method is able to accurately track the motion of the vehicle. 
+Future work will focus on utilizing this estimate in a closed-loop control and guidance scheme to enable autonomous landing and obstacle avoidance. 
 \bibliographystyle{AAS_publication} 
-% \bibliography{library}
-\bibliography{library_local}
+\bibliography{library}
+% \bibliography{library_local}
 
 \end{document}
