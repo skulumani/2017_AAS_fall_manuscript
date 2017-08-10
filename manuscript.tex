@@ -439,6 +439,10 @@ From each image, a series of features are detected and tracked between subsequen
 A visualization of this process is shown in~\cref{fig:orbslam_mappoints} which shows the tracked features of the image in green.
 From these tracked features it is possible to estimate the relative motion of the camera~\cite{szeliski2010}.
 \Cref{fig:orbslam_localization} shows a visualization of the localization process from the imagery. 
+Through monocular images it is not possible to compute the position of the camera relative to the inertial frame.
+Rather, it is only possible to determine a camera pose accurate to an unknown scale factor. 
+This limitation is intrinsic to the transformation of the three-dimensional scene onto the two-dimensional image plane~\cite{szeliski2010}.
+However, it is possible to compute the relative motion between sequential images and we use this to estimate the motion of the camera.
 \begin{figure}[htbp]
     \begin{subfigure}[htbp]{0.5\textwidth} 
         \includegraphics[width=\textwidth, keepaspectratio]{figures/orbslam_mappoints.png} 
@@ -449,10 +453,29 @@ From these tracked features it is possible to estimate the relative motion of th
         \caption{ORB-SLAM2 Localization from monocular images \label{fig:orbslam_localization}} 
     \end{subfigure} 
 \end{figure}
-% TODO: Plots of trajectory
 
-% TODO: Control input plot
-% TODO: Show estimation from SLAM
+An additional complexity is due to the fact that the dynamic equations of motion are defined in the inertial reference frame. 
+As a result, the asteroid is rotating relative to this frame while the dumbbell is moving relative to the inertial frame. 
+The majority of SLAM methodologies use the implicit assumption of a stationary scene or terrain and a moving camera. 
+As a result, the motion estimate from the imagery is defined relative to the asteroid fixed frame, rather than the inertial frame. 
+However, we assume that the motion of the asteroid is known and constant. 
+Over the relatively short timespan of the simulation this is an appropriate assumption and does not significantly affect the solution.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\textwidth,keepaspectratio]{figures/keyframe_estimate.pdf}
+    \caption{Comparison of image estimate and true trajectory in asteroid fixed frame\label{fig:estimate}}
+\end{figure}
+\Cref{fig:estimate} shows a comparison of the estimated position in blue and the true position in the asteroid fixed frame. 
+The estimate is quite accurate in the \( x \) axis. 
+This is primarily due to the fact that during the vertical descent that asteroid remains fixed relative to the spacecraft. 
+As a result, a large number of image features are able to be accurately tracked during the motion towards the surface. 
+This is also evident by the denser keyframes in the later portion of the simulation as compared to the beginning. 
+The estimate tends to diverge in the other two axes.
+However, the general trend is captured in the \( y \) axis and the error in the \( z \) axis is on the order of \SI{100}{\meter}. 
+This simulation demonstrates the ability to track a desired trajectory for the coupled motion of a rigid spacecraft on \SE.
+Furthermore, we show the ability to estimate the motion using a single monocular camera during a short duration landing trajectory. 
+In spite of the complex and difficult lighting conditions an estimate is able to be generated.
+
 \section{Conclusions}\label{sec:conclusions}
 There have been a variety of approaches for the analysis and design of orbital trajectories around asteroids.
 Relatively less work has been directed towards the design of landing trajectories.
