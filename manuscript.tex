@@ -414,14 +414,10 @@ The attitude of the dumbbell is displayed at several points along the trajectory
 Furthermore, asteroid Itokawa is shown in it's final orientation at the completion of the landing simulation. 
 \Cref{fig:pos_components} shows that the nonlinear controller is able to accurately track the desired translational trajectory for the duration of the simulation.
 \begin{figure}[htbp]
-    \begin{subfigure}[htbp]{0.5\textwidth} 
-        \includegraphics[width=\textwidth, keepaspectratio]{figures/traj_fig.pdf} 
-        \caption{Planar view of landing trajectory\label{fig:true_landing_trajectory}} 
-    \end{subfigure}~
-    \begin{subfigure}[htbp]{0.5\textwidth} 
-        \includegraphics[width=\textwidth, keepaspectratio]{figures/pos_fig.pdf} 
-        \caption{Position of spacecraft in the inertial frame\label{fig:pos_components}} 
-    \end{subfigure} 
+    \captionsetup[subfigure]{position=b}
+    \centering
+    \subcaptionbox{Planar view of landing trajectory\label{fig:true_landing_trajectory}}{\includegraphics[width=0.5\textwidth]{figures/traj_fig.pdf}}~
+    \subcaptionbox{Position of spacecraft in the inertial frame\label{fig:pos_components}}{\includegraphics[width=0.5\textwidth]{figures/pos_fig.pdf}}
     \caption{Landing trajectory to asteroid Itokawa~\label{fig:position}}
 \end{figure}
 
@@ -444,14 +440,11 @@ Rather, it is only possible to determine a camera pose accurate to an unknown sc
 This limitation is intrinsic to the transformation of the three-dimensional scene onto the two-dimensional image plane~\cite{szeliski2010}.
 However, it is possible to compute the relative motion between sequential images and we use this to estimate the motion of the camera.
 \begin{figure}[htbp]
-    \begin{subfigure}[htbp]{0.5\textwidth} 
-        \includegraphics[width=\textwidth, keepaspectratio]{figures/orbslam_mappoints.png} 
-        \caption{ORB-SLAM2 Feature Tracking Visualization\label{fig:orbslam_mappoints}} 
-    \end{subfigure}~
-    \begin{subfigure}[htbp]{0.5\textwidth} 
-        \includegraphics[width=\textwidth, keepaspectratio]{figures/orbslam_localization.png} 
-        \caption{ORB-SLAM2 Localization from monocular images \label{fig:orbslam_localization}} 
-    \end{subfigure} 
+    \captionsetup[subfigure]{position=b}
+    \centering
+    \subcaptionbox{Feature tracking visualization\label{fig:orbslam_mappoints}}{\includegraphics[width=0.5\textwidth]{figures/orbslam_mappoints.png}}~
+    \subcaptionbox{Localization from monocular images\label{fig:orbslam_localization}}{\includegraphics[width=0.5\textwidth]{figures/orbslam_localization.png}}
+    \caption{ORB-SLAM2 feature detection and localization from imagery~\label{fig:orbslam}}
 \end{figure}
 
 An additional complexity is due to the fact that the dynamic equations of motion are defined in the inertial reference frame. 
