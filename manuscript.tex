@@ -11,7 +11,7 @@
 %\usepackage{subfigure} % have subcaption in use instead
 %\usepackage[notref,notcite]{showkeys}  % use this to temporarily show labels
 
-\PaperNumber{XX-XXX}
+\PaperNumber{17-720}
 
 \begin{document}
 
@@ -28,13 +28,14 @@
     Geometric methods are used to derive the coupled equations of motion, defined on the configuration space \(\SE\), and then a nonlinear controller is designed to enable trajectory tracking of desired landing trajectories.
     Rather than relying on sliding mode control or optimization based methods, the proposed approach avoids the increased control utilization and computational complexity inherent in other techniques.
     The nonlinear controller is used to track a desired landing trajectory to the asteroid surface. 
-    A monocular imaging sensor is used to provide position and attitude estimates using visual odometry to enable closed-loop trajectory tracking.
+    A monocular imaging sensor is used to provide position and attitude estimates using visual odometry to enable relative state estimates.
     We demonstrate this control scheme with a landing simulation about asteroid Itokawa.
 \end{abstract}
 
 \section{Introduction}\label{sec:introduction}
 % Motivation for missions/studying asteroids
-Small solar system bodies, such as asteroids and comets, are of significant interest to the scientific community; These small bodies offer great insight into the early formation of the solar system.
+Small solar system bodies, such as asteroids and comets, are of significant interest to the scientific community.
+These small bodies offer great insight into the early formation of the solar system.
 This insight offers additional detail into the formation of the Earth and also the probable formation of other extrasolar planetary bodies.
 Of particular interest are those near-Earth asteroids (NEA) which inhabit heliocentric orbits in the vicinity of the Earth.
 These easily accessible bodies provide attractive targets to support space industrialization, mining operations, and scientific missions.
@@ -66,9 +67,9 @@ As a result, the orbital environment is generally quite complex and it is diffic
 One key consideration is the coupling between rotational and translational states around the asteroid.
 The coupling is induced due to the different gravitational forces experienced on various parts of the spacecraft.
 The effect of the gravitational coupling is related to the parameter \(\epsilon = \frac{r}{R_c}\), where \(r\) is the characteristic spacecraft length and \(R_c\) is the orbital radius~\cite{hughes2004}.
-For Earth based missions, the orbital radius is several orders of magnitude larger than the spacecraft length and the \(\epsilon\) is small.
+For Earth based missions, the orbital radius is several orders of magnitude larger than the spacecraft length and \(\epsilon\) is small.
 As a result, the corresponding gravitational moment is weak and can be neglected. 
-Therefore, therefore the translational and rotational equations of motion become decoupled and can be considered separately, significantly simplifying the analysis. 
+Therefore, the translational and rotational equations of motion become decoupled and can be considered separately, significantly simplifying the analysis. 
 However, for operations around an asteroid the orbital radius is much smaller, which leads to much larger values of \(\epsilon\) and much larger influence of the rotational and translational coupling.
 There has been significant work in the investigation of the coupling between orbital and attitude dynamics~\cite{elmasri2005, sanyal2004, fruh2013}.
 References~\citenum{elmasri2005} and~\citenum{sanyal2004} investigated the coupling of an elastic dumbbell spacecraft in orbit about a central body, but only considered the case of a spherically symmetric central body.
@@ -110,7 +111,7 @@ As a result, this simple model is useful to capture the main characteristics of 
 Typically, spacecraft have mass concentrated in a central structure, referred to as the bus, which houses the command and control system, actuators, fuel, sensors etc. 
 In addition, comparatively light-weight solar panels extend from the bus to provide electrical energy from solar radiation. 
 As a result, the distributed mass of the spacecraft is captured with the dumbbell representation.
-
+In this section, we briefly review the polyhedron potential model and then present the derivation of the coupled dynamics of a dumbbell spacecraft about an asteroid.
 
 
 \subsection{Polyhedron Potential Model}\label{sec:polyhedron_potential}
@@ -187,7 +188,7 @@ The Laplacian, defined in~\cref{eq:laplacian}, gives a simple method to determin
 \subsection{Dumbbell Spacecraft Equations of Motion}\label{sec:dumbbell}
 
 
-The configuration space for rigid body motion is the semi-direct product, \(\SE = \R^3 \rtimes \SO \), namely the special euclidean group.
+The configuration space for rigid body motion is the semi-direct product, \(\SE = \R^3 \times \SO \), namely the special euclidean group.
 The variations should be carefully constructed such that they respect the geometry of the configuration space.
 By expressing the motion of the dumbbell directly on the special euclidean group, we avoid the issues inherent in using other kinematic representations which fail to preserve the geometric properties of the configuration space.
 The kinematics of the dumbbell and asteroid are described in the inertial frame by
@@ -200,15 +201,14 @@ The kinematics of the dumbbell and asteroid are described in the inertial frame 
 In this work, we assume that the asteroid is much more massive than the spacecraft and its motion is not affected by that of the spacecraft.
 This assumption allows us to treat the motion of the vehicle independently from that of the asteroid, instead of treating the more complicated full-body problem. 
 
-Using our kinematic variables we can define the kinetic and potential energy as
+Using our kinematic variables we can define the kinetic and potential energy of the dumbbell as
 \begin{align}\label{eq:kinetic_energy}
     T &= \frac{1}{2} m \norm{\dot{\vb{x}}}^2 + \frac{1}{2} \tr{S(\vb{\Omega}) J_d S(\vb{\Omega})^T} , \\
     V( \vecbf{x}, R ) &=  - m_1 U \parenth{R_A^T \parenth{\vecbf{x} + R \vecbf{\rho}_1}} - m_2 U \parenth{R_A^T \parenth{\vecbf{x} + R \vecbf{\rho}_2}} ,
 \end{align}
 where the polyhedron potential is defined in~\cref{eq:potential}.
 The position of each mass \(m_i\) of the dumbbell is defined in the dumbbell fixed frame by the vector \(\vb{\rho}_i\). 
-The next step is to define the variations of the kinetic and potential energy to derive the equations of motion.
-The variation of the potential and kinetic energy can then be defined as
+The next step is to define the variations of the kinetic and potential energy to derive the equations of motion, which are given as
 \begin{align} 
     \delta V &= -\sum_{i=1}^2  m_i \parenth{R_A \deriv{U}{\vb{z}_i} }^T \delta \vb{x} + m_i \hat{\vb{\eta}}\cdot \hat{\vb{\rho}_1} R^T R_A \deriv{U}{\vb{z}_i}, \\
     \delta T &= \parenth{m_1 + m_2} \dot{\vecbf{x}}^T \delta \dot{\vb{x}} + \frac{1}{2} \tr{ - \dot{\hat{\vb{\eta}}} S(J \vb{\Omega}) + \hat{\vb{\eta}} S(\hat{ \vb{\Omega}} J \vb{\Omega})} , 
@@ -222,7 +222,7 @@ Hamilton's principle then states that the variation of the action integral
 is stationary with fixed endpoints. 
 Applying the calculus of variations and integration by parts results in the familiar Euler-Lagrange equations of motion.
 Applying the Legendre transformation allows for the same dynamics to be expressed in an equivalent form as Hamilton's equations~\cite{lanczos1970}.
-The equations of motion of a dumbbell spacecraft influenced by a polyhedron potential model is given as
+The equations of motion of a dumbbell spacecraft influenced by a polyhedron potential model are given as
 \begin{align}
     \dot{\vb{x}} &= \vb{v}, \label{eq:position_kinematics}\\
     \parenth{m_1 + m_2} \dot{\vecbf{v}} &= m_1 R_A \deriv{U}{\vecbf{z}_1} + m_2 R_A \deriv{U}{\vecbf{z}_2} + \vecbf{u}_f, \label{eq:translational_dynamics}\\
@@ -232,8 +232,9 @@ The equations of motion of a dumbbell spacecraft influenced by a polyhedron pote
 The vectors \( \vecbf{z}_1 \) and \( \vecbf{z}_2\) define the position of the dumbbell masses as represented in the asteroid fixed frame and are defined as
 \begin{align}
     \vecbf{z}_1 &= R_A^T \parenth{\vecbf{x} + R \vecbf{\rho}_1} , \\
-    \vecbf{z}_2 &= R_A^T \parenth{\vecbf{x} + R \vecbf{\rho}_2}.
+    \vecbf{z}_2 &= R_A^T \parenth{\vecbf{x} + R \vecbf{\rho}_2}, 
 \end{align}
+where \( \vb{\rho}_i \) defines the position of each mass in the spacecraft fixed body frame.
 The gravitational moment on the dumbbell \( \vecbf{M}_i\) is defined as
 \begin{align}
     \vecbf{M}_i = m_i \parenth{S(R_A^T \vb{\rho}_i) R^T \deriv{U}{\vb{z}_i}}.
@@ -247,7 +248,7 @@ In this work, we consider trajectories about asteroid 25413 Itokawa.
 Itokawa was the target of the Hayabusa mission and detailed shape and surface maps have been generated~\cite{kawaguchi2006,tanimoto2013,fujiwara2006}.
 We use the estimated rotation period of \SI{12.1}{\hour} with a nominal density of \SI{1.9}{\gram\per\centi\meter\cubed} in the polyhderon potential model.
 The shape model is composed of \num{786432} triangular faces and a rendering of the asteroid is provided in~\cref{fig:itokawa_3d}.
-A highly detailed model is used to for the shape of the asteroid to provide a more detailed and feature rich imaging target. 
+A highly detailed model is used for the shape of the asteroid to provide a more detailed and feature rich imaging target. 
 However, the polyhedron potential model uses a much coarser shape composed of \num{64} faces. 
 This greatly reduces the complexity of the potential model without a significant difference in the qualitative nature of the dynamic environment.
 \begin{figure}[htbp]
@@ -260,9 +261,9 @@ This greatly reduces the complexity of the potential model without a significant
 Images of asteroid Itokawa are simulated using Blender, a free and open-source computer graphics software program~\cite{blenderfoundation1995--2017}.
 Blender is primarily used by the animation and computer modeling fields to create computer generated images, videos and animations for films and video games. 
 Blender offers the capability of accurately modelling the various effects of camera, lighting, and surface properties of a scene using the \texttt{cycles} path-tracing rendering engine.
-A unique feature is the ability to compile the Blender rendering software as a python module.
+A unique feature is the ability to compile the Blender rendering software as a Python module.
 This allows one to use the capabilities of Blender through a Python API in personal scripts and functions programmatically, rather than through a desktop based graphical interface.
-A camera is simulated within blender with the parameters shown in~\cref{tab:camera_parameters}, which are chosen to emulate the primary sensor of the NEAR spacecraft~\cite{hawkins1997}.
+A camera is simulated within Blender with the parameters shown in~\cref{tab:camera_parameters}, which are chosen to emulate the primary sensor of the NEAR spacecraft~\cite{hawkins1997}.
 \begin{table}
     \centering
 \begin{tabular}{llr}  
@@ -286,7 +287,7 @@ Image Size & horizontal & \SI{537}{\px}\\
 A wide variety of control schemes have been proposed for asteroid landing missions~\cite{furfaro2013,li2011a}.
 In addition, there are a  variety of controllers developed for systems evolving on \( \SE \)~\cite{lee2010,lee2013}.
 In this paper, we extend their use from quadrotor aerial vehicles into the space domain. 
-This approach addresses many of the issues associated with the previous work on asteroid landings.
+This approach addresses many of the issues associated with the related work on asteroid landings.
 The geometric control methods used to develop these nonlinear controllers allow for the development of control systems for dynamic systems which evolve on nonlinear manifolds. 
 By developing the control system directly on the nonlinear manifold, geometric control techniques provide unique advantages as compared to those developed using local coordinate representations.
 Furthermore, the geometric controller avoids the chattering issues inherent in the previous sliding mode control approaches to asteroid landing.
@@ -309,7 +310,7 @@ Using the variations of \( \Psi \) gives the attitude tracking error vector \( e
 \begin{align}\label{eq:attitude_error_vector}
     e_R = \frac{1}{2} \parenth{R_d^T R - R^T R_d^\vee}.
 \end{align}
-After further manipulation and the attitude kinematics equation it is possible to define the angular veloicty tracking error \( e_\Omega \in \R^3 \) as
+After further manipulation and using the attitude kinematics equation from~\cref{eq:attitude_kinematics}, it is possible to define the angular veloicty tracking error \( e_\Omega \in \R^3 \) as
 \begin{align}\label{eq:angular_velocity_error_vector}
     e_\Omega = \Omega - R^T R_d \Omega_d .
 \end{align}
@@ -334,20 +335,20 @@ where \( k_x, k_v \) are positive constants.
 The control gains are chosen based on the desired closed-loop system response. 
 A variety of techniques are available to choose these gains, but a simple linear analysis offers a straightforward and systematic approach to choosing suitable values. 
 We use the control inputs defined in~\cref{eq:translation_control,eq:rotational_control} and substitute them into the dynamic equations of motion in~\cref{eq:translational_dynamics,eq:attitude_dynamics}.
-This results in the dynamics of the error variables and the gains are chosen to ensure the error behavior meets desired performance criteria~\cite{nise2004}.
+This results in the dynamics of the error variables and the gains are chosen to ensure the error behavior meets desired performance criteria, such as percent overshoot or settling time~\cite{nise2004}.
 
 
 \subsection{Estimating motion from Monocular Imagery}\label{eq:image_processing}
 
 Typically, spacecraft missions require extensive interaction from ground based human operators. 
-This interaction ranges from simple status checks up to navigation and pointing commands.
+This interaction ranges from system health checks to navigation and hardware commands.
 In addition, there is frequently a large group of analysts in support of any given mission. 
-A wide variety of factor make human in the loop control of spacecraft especially difficult.
+A wide variety of factors make human in the loop control of spacecraft especially difficult.
 First, the vast distances cause significant time delays which render it impossible to react immediately to events experienced by the spacecraft. 
-Furthermore, deep space missions are designed to continuous mission operations for many years or even decades. 
+Furthermore, deep space missions are designed for continuous mission operations for many years or even decades. 
 It is becoming increasingly difficult to maintain trained and knowledgeable staff for several decades in order to support a single mission.
 In addition, these operators become increasingly scarce as the contemporary hardware and software tools surpass those of these decades old spacecraft. 
-As a result, there is a large focus to enable some level, with the eventual goal, of completely autonomous spacecraft systems.
+As a result, there is a large focus on completely autonomous spacecraft systems.
 
 We seek to utilize well-proven methods in the computer vision and robotics community to first localize the position of the spacecraft from visual imagery.
 A secondary step, which is left to a subsequent publication, is then to use this imagery to autonomously update the position of the spacecraft while simultaneously mapping the surface. 
