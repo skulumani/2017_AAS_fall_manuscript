@@ -4,9 +4,9 @@ This is our manuscript for the [2017 AAS]() conference held August 20-24 2017 at
 
 Some other useful links:
 
-* [Code]()
-* [Presentation]()
-* [Blog Post]()
+* [Code](https://www.github.com/fdcl-gwu/asteroid_dumbbell)
+* [Presentation](https://github.com/fdcl-gwu/2017_AAS_fall_presentation)
+* [Blog Post](https://shankarkulumani.com/2017/08/2017AAS-FALL.html)
 
 ## Bibtex
 
