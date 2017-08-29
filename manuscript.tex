@@ -25,7 +25,7 @@
 
 \begin{abstract}
     This paper considers the coupled orbit and attitude dynamics of a dumbbell spacecraft around an asteroid. 
-    Geometric methods are used to derive the coupled equations of motion, defined on the configuration space of the special Euclidean group, and then a nonlinear controller is designed to enable trajectory tracking of desired landing trajectories.
+    Geometric methods are used to derive the coupled equations of motion, which are defined on the configuration space of the special Euclidean group, and then a nonlinear controller is designed to enable trajectory tracking of desired landing trajectories.
     Rather than relying on sliding mode control or optimization based methods, the proposed approach avoids the increased control utilization and computational complexity inherent in other techniques.
     The nonlinear controller is used to track a desired landing trajectory to the asteroid surface. 
     A monocular imaging sensor is used to provide position and attitude estimates using visual odometry to enable relative state estimates.
@@ -97,7 +97,7 @@ As a result, the polyhedron model is ideal for all phases of spacecraft operatio
 
 Determination of the state of the spacecraft is typically dependent on ground based observations with sporadic state updates.
 An additional capability is possible by using on-board sensors to estimate the state of the spacecraft relative to the asteroid~\cite{kubota2003,miso1999}.
-We seek to incoporate localization using monocular images into the geometric nonlinear controller. 
+We seek to incorporate localization using monocular images into the geometric nonlinear controller. 
 This will offer the ability to increase the accuracy and frequency of state estimates and allow for closed loop control for landing operations. 
 The use of imagery also enables the use of computer vision algorithms and tools to estimate the shape and motion of the asteroid.
 The combination of visual localization and geometric control is a new avenue for the operation of spacecraft near asteroids.
@@ -252,7 +252,7 @@ The control inputs to the spacecraft are defined by \( \vb{u}_f, \vb{u}_m \) whi
 \subsection{Itokawa Shape Model and Simulated Imagery}\label{sec:imagery}
 In this work, we consider trajectories about asteroid 25413 Itokawa.
 Itokawa was the target of the Hayabusa mission and detailed shape and surface maps have been generated~\cite{kawaguchi2006,tanimoto2013,fujiwara2006}.
-We use the estimated rotation period of \SI{12.1}{\hour} with a nominal density of \SI{1.9}{\gram\per\centi\meter\cubed} in the polyhderon potential model.
+We use the estimated rotation period of \SI{12.1}{\hour} with a nominal density of \SI{1.9}{\gram\per\centi\meter\cubed} in the polyhedron potential model.
 The shape model is composed of \num{786432} triangular faces and a rendering of the asteroid is provided in~\cref{fig:itokawa_3d}.
 A highly detailed model is used for the shape of the asteroid to provide a more detailed and feature rich imaging target. 
 However, the polyhedron potential model uses a much coarser shape composed of \num{64} faces. 
@@ -266,7 +266,7 @@ This greatly reduces the complexity of the potential model without a significant
 
 Images of asteroid Itokawa are simulated using Blender, a free and open-source computer graphics software program~\cite{blenderfoundation1995--2017}.
 Blender is primarily used by the animation and computer modeling fields to create computer generated images, videos and animations for films and video games. 
-Blender offers the capability of accurately modelling the various effects of camera, lighting, and surface properties of a scene using the \texttt{cycles} path-tracing rendering engine.
+Blender offers the capability of accurately modeling the various effects of camera, lighting, and surface properties of a scene using the \texttt{cycles} path-tracing rendering engine.
 A unique feature is the ability to compile the Blender rendering software as a Python module.
 This allows one to use the capabilities of Blender through a Python API in personal scripts and functions programmatically, rather than through a desktop based graphical interface.
 A camera is simulated within Blender with the parameters shown in~\cref{tab:camera_parameters}, which are chosen to emulate the primary sensor of the NEAR spacecraft~\cite{hawkins1997}.
@@ -316,7 +316,7 @@ Using the variations of \( \Psi \) gives the attitude tracking error vector \( e
 \begin{align}\label{eq:attitude_error_vector}
     e_R = \frac{1}{2} \parenth{R_d^T R - R^T R_d^\vee}.
 \end{align}
-After further manipulation and using the attitude kinematics equation from~\cref{eq:attitude_kinematics}, it is possible to define the angular veloicty tracking error \( e_\Omega \in \R^3 \) as
+After further manipulation and using the attitude kinematics equation from~\cref{eq:attitude_kinematics}, it is possible to define the angular velocity tracking error \( e_\Omega \in \R^3 \) as
 \begin{align}\label{eq:angular_velocity_error_vector}
     e_\Omega = \Omega - R^T R_d \Omega_d .
 \end{align}
@@ -366,8 +366,8 @@ This ``feature-extraction'' stage uses the FAST feature detector to determine su
 Next, these features are matched to subsequent images in a ``feature-matching'' stage to determine correspondance between subsequent images. 
 For example,~\cref{fig:itokawa_feature_matching} shows a demonstration of features computed in two view of asteroid Itokawa. 
 In addition, the correspondance is accurately computed between matching features as shown by the horizontal lines across both images.
-From these correspondances, the pose of the camera system is estimated and predicted forward in time using a constant velocity model.
-In a simultaenous thread, the ORB-SLAM system builds a local map and stores feature data in order to perform loop closure in the event of returning to a previously imaged location.
+From these correspondences, the pose of the camera system is estimated and predicted forward in time using a constant velocity model.
+In a simultaneous thread, the ORB-SLAM system builds a local map and stores feature data in order to perform loop closure in the event of returning to a previously imaged location.
 We utilize ORB-SLAM to provide an estimate of the position of the rigid spacecraft and will use this estimate to compute the control input.
 \begin{figure}[htbp]
     \centering
@@ -378,7 +378,7 @@ We utilize ORB-SLAM to provide an estimate of the position of the rigid spacecra
 \section{Numerical Simulation}\label{sec:simulation}
 
 We present a numerical simulation of a rigid dumbbell about asteroid Itokawa.
-The dumbbell spacecraft is composed of two equal masses, \( m_1, m_2 = \SI{500}{\kilo\gram} \), seperated by \( l = \SI{3}{\meter} \).
+The dumbbell spacecraft is composed of two equal masses, \( m_1, m_2 = \SI{500}{\kilo\gram} \), separated by \( l = \SI{3}{\meter} \).
 The dumbbell body frame is defined with the first body fixed axis, \( \vb{b}_1 \), originating at the center of mass of the spacecraft and directed along the vector from \( m_1 \) towards \( m_2 \).
 The other two axes of the spacecraft fixed frame are chosen orthogonal to the \( \vb{b}_1 \) and lie in the plane orthogonal to the dumbbell axis of symmetry. 
 A camera, using the parameters from~\cref{tab:camera_parameters}, is aligned with the \( \vb{b}_1 \) axis and used to feed image data to the ORB-SLAM system.
@@ -412,12 +412,12 @@ The desired attitude command is defined as
     \vb{b}_{2d} &= \vb{b}_{3d} \times \vb{b}_{1d} , \\
 R_d &= \begin{bmatrix} \vb{b}_{1d} & \vb{b}_{2d} & \vb{b}_{3d} \end{bmatrix} .
 \end{align}
-The camera axis is aligned with the spacecraft \( \vb{b}_ 1 \) axis, which is direted towards the asteroid, throughout the landing trajectory as the spacecraft moves in the equatorial plane of the asteroid.
+The camera axis is aligned with the spacecraft \( \vb{b}_ 1 \) axis, which is directed towards the asteroid, throughout the landing trajectory as the spacecraft moves in the equatorial plane of the asteroid.
 
 The simulation is carried out over \SI{7200}{\second} with the spacecraft following a circular trajectory for the first \SI{3600}{\sec} before vertically descending in the body fixed frame for the last \SI{3600}{\second}.
 \Cref{fig:true_landing_trajectory} shows a view from the positive \( \vb{f}_3 \) pole of the asteroid of the simulated trajectory. 
 The position of the center of mass of the dumbbell is shown in blue, while the pointing direction of the camera axis is defined in red. 
-The attitude of the dumbbell is displayed at several points along the trajectory demonstraiting the pointing of the camera. 
+The attitude of the dumbbell is displayed at several points along the trajectory demonstrating the pointing of the camera. 
 Furthermore, asteroid Itokawa is shown in its final orientation at the completion of the landing simulation. 
 \Cref{fig:pos_components} shows that the nonlinear controller is able to accurately track the desired translational trajectory for the duration of the simulation.
 \begin{figure}[htbp]
@@ -429,7 +429,7 @@ Furthermore, asteroid Itokawa is shown in its final orientation at the completio
 \end{figure}
 
 Concurrent with the simulation, we generate images of Itokawa using Blender, as described earlier.
-The images are generated at a rate of \SI{1}{\hertz} and stored for post processing and one exampel view is shown in~\cref{fig:example_image}. 
+The images are generated at a rate of \SI{1}{\hertz} and stored for post processing and one example view is shown in~\cref{fig:example_image}. 
 From these images we estimate the position of the camera relative to the asteroid using monocular localization.
 In this work, we demonstrate the ability to generate realistic imagery and the processing of these images to determine a state estimate of the camera pose.
 In future work, we seek to use this state estimate in a closed-loop controller to enable a fully-autonomous control system for the spacecraft. 
@@ -486,7 +486,7 @@ We explicitly consider the impact of the gravitational moment on both the orbit 
 With this accurate equations of motion we develop geometric nonlinear controllers which allow for the vehicle to track a desired landing trajectory. 
 The desired landing trajectory is accurately followed by the nonlinear controller on \SE.
 Furthermore, we use current image processing techniques to estimate the motion of the spacecraft given only two-dimensional images. 
-Inspite of the challenging environment, with limited lighting and a reduced simulation span, the method is able to accurately track the motion of the vehicle. 
+In spite of the challenging environment, with limited lighting and a reduced simulation span, the method is able to accurately track the motion of the vehicle. 
 Future work will focus on utilizing this estimate in a closed-loop control and guidance scheme to enable autonomous landing and obstacle avoidance. 
 \bibliographystyle{AAS_publication} 
 \bibliography{library}
